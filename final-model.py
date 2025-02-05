@@ -35,11 +35,20 @@ if uploaded_file is not None:
     # Read and preprocess data based on file type
     try:
         if uploaded_file.name.endswith("xlsx"):
-            data = pd.read_excel(uploaded_file)
+            # Load the Excel file to check available sheet names
+            xls = pd.ExcelFile(uploaded_file)
+            sheet_names = xls.sheet_names
+
+            # Let user select a sheet
+            selected_sheet = st.selectbox("Select a sheet", sheet_names)
+
+            # Load data from the selected sheet
+            data = pd.read_excel(uploaded_file, sheet_name=selected_sheet)
+        
         else:
             data = pd.read_csv(uploaded_file)
         
-        # Display the first few rows of the dataset to help users identify the data
+        # Display the first few rows of the dataset
         st.subheader("Data Preview")
         st.dataframe(data.head())
 
@@ -117,28 +126,23 @@ if uploaded_file is not None:
                 # Add a slider to choose the number of clusters
                 num_clusters = st.slider("Select number of clusters", min_value=2, max_value=10, value=3)
 
-                # Check if number of clusters is greater than the number of samples
-                n_samples = len(data[selected_column].dropna())
-                if num_clusters > n_samples:
-                    st.error(f"Cannot have more clusters ({num_clusters}) than samples ({n_samples}).")
-                else:
-                    tfidf_vectorizer = TfidfVectorizer(stop_words='english')
-                    tfidf_matrix = tfidf_vectorizer.fit_transform(data[selected_column])
-                    kmeans = KMeans(n_clusters=num_clusters, random_state=42)
-                    data['cluster'] = kmeans.fit_predict(tfidf_matrix)
-                    st.write(data[[selected_column, 'cluster']])
+                tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+                tfidf_matrix = tfidf_vectorizer.fit_transform(data[selected_column])
+                kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+                data['cluster'] = kmeans.fit_predict(tfidf_matrix)
+                st.write(data[[selected_column, 'cluster']])
 
-                    # Reduce dimensionality of the data to 2D using PCA for visualization
-                    pca = PCA(n_components=2)
-                    pca_components = pca.fit_transform(tfidf_matrix.toarray())
-                    data['pca1'] = pca_components[:, 0]
-                    data['pca2'] = pca_components[:, 1]
+                # Reduce dimensionality of the data to 2D using PCA for visualization
+                pca = PCA(n_components=2)
+                pca_components = pca.fit_transform(tfidf_matrix.toarray())
+                data['pca1'] = pca_components[:, 0]
+                data['pca2'] = pca_components[:, 1]
 
-                    # Plot the clusters
-                    plt.figure(figsize=(10, 8))
-                    sns.scatterplot(x='pca1', y='pca2', hue='cluster', data=data, palette='viridis', s=100)
-                    plt.title(f'Clusters Visualization (n_clusters={num_clusters})')
-                    st.pyplot(plt)
+                # Plot the clusters
+                plt.figure(figsize=(10, 8))
+                sns.scatterplot(x='pca1', y='pca2', hue='cluster', data=data, palette='viridis', s=100)
+                plt.title(f'Clusters Visualization (n_clusters={num_clusters})')
+                st.pyplot(plt)
 
             # Download section
             st.sidebar.header("Download Results")
