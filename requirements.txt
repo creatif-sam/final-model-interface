@@ -10,5 +10,6 @@ openpyxl
 textblob
 scikit-learn
 wordcloud
+sentencepiece
 spacy
 python-Levenshtein
