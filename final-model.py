@@ -13,7 +13,7 @@ from wordcloud import WordCloud
 import spacy
 
 # Page configuration
-st.set_page_config(page_title="TransSustain WEBP", layout="wide")
+st.set_page_config(page_title="Trans-Sustain", layout="wide")
 
 # Load models with caching
 @st.cache_resource
@@ -108,9 +108,12 @@ if uploaded_file is not None:
 
         with tab4:
             st.header("Text Clustering")
+            # Add a slider to choose the number of clusters
+            num_clusters = st.slider("Select number of clusters", min_value=2, max_value=10, value=3)
+
             tfidf_vectorizer = TfidfVectorizer(stop_words='english')
             tfidf_matrix = tfidf_vectorizer.fit_transform(data[selected_column])
-            kmeans = KMeans(n_clusters=3, random_state=42)
+            kmeans = KMeans(n_clusters=num_clusters, random_state=42)
             data['cluster'] = kmeans.fit_predict(tfidf_matrix)
             st.write(data[[selected_column, 'cluster']])
 
