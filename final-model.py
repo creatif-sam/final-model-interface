@@ -129,4 +129,4 @@ else:
     st.info("Please upload a file to begin analysis")
 
 # Footer with credits
-st.markdown("<br><br><center><i>Made with love by Samuel, Christianah, Mehdi, and John</i></center>", unsafe_allow_html=True)
+st.markdown("<br><br><center><i>Made with ❤️ by Samuel, Christianah, Mehdi, and John</i></center>", unsafe_allow_html=True)
