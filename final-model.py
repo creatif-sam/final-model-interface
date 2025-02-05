@@ -13,7 +13,7 @@ from wordcloud import WordCloud
 import spacy
 
 # Page configuration
-st.set_page_config(page_title="Generalized Text Analysis", layout="wide")
+st.set_page_config(page_title="TransSustain WEBP", layout="wide")
 
 # Load models with caching
 @st.cache_resource
@@ -127,3 +127,6 @@ if uploaded_file is not None:
 
 else:
     st.info("Please upload a file to begin analysis")
+
+# Footer with credits
+st.markdown("<br><br><center><i>Made with love by Samuel, Christianah, Mehdi, and John</i></center>", unsafe_allow_html=True)
