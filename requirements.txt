@@ -1,0 +1,13 @@
+streamlit
+pandas
+numpy
+matplotlib
+fuzzywuzzy
+torch
+transformers
+openpyxl
+textblob
+scikit-learn
+wordcloud
+spacy
+python-Levenshtein
